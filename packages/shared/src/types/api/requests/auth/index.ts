@@ -1,1 +1,1 @@
-export { default as ILoginRequest } from "./ILoginRequest";
+export type { default as ILoginRequest } from "./ILoginRequest";

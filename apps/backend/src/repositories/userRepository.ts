@@ -1,20 +1,20 @@
-import { db, type User } from "../db/lowdb.js";
+import { db } from "../db/lowdb";
 import type { IUser } from "@codingchallenge/shared";
 
-export async function findUserByEmail(email: string): Promise<User | undefined> {
+export async function findUserByEmail(email: string): Promise<IUser | undefined> {
   await db.read();
   return db.data!.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
 }
 
-export async function findUserById(userId: string): Promise<User | undefined> {
+export async function findUserById(userId: string): Promise<IUser | undefined> {
   await db.read();
   return db.data!.users.find((u) => u.id === userId);
 }
 
-export async function createUser(input: { email: string; name?: string }): Promise<User> {
+export async function createUser(input: { email: string; name?: string }): Promise<IUser> {
   await db.read();
   const now = new Date().toISOString();
-  const user: User = {
+  const user: IUser = {
     id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
     email: input.email,
     name: input.name,
@@ -26,7 +26,7 @@ export async function createUser(input: { email: string; name?: string }): Promi
   return user;
 }
 
-export async function updateUser(userId: string, patch: Partial<Pick<User, "name" | "email">>): Promise<User | undefined> {
+export async function updateUser(userId: string, patch: Partial<Pick<IUser, "name" | "email">>): Promise<IUser | undefined> {
   await db.read();
   const user = db.data!.users.find((u) => u.id === userId);
   if (!user) return undefined;

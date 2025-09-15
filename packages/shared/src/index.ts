@@ -1,4 +1,14 @@
 import { z } from 'zod'
+export * from './types/core/user'
+export * from './types/core/auth'
+export * from './types/core/github'
+
+export * from './types/api/requests/auth'
+export * from './types/api/responses/auth'
+export * from './types/api/requests/user'
+export * from './types/api/responses/user'
+export * from './types/api/requests/github'
+export * from './types/api/responses/github'
 
 export const ApiErrorSchema = z.object({
   message: z.string(),

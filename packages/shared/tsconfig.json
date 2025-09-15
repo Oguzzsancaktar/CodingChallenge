@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "composite": true,
+    "composite": false,
     "declaration": true,
     "emitDeclarationOnly": false,
     "outDir": "dist",
@@ -12,6 +12,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "src"
+    "src/**/*.ts"
   ]
 }
