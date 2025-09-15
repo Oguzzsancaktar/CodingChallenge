@@ -8,6 +8,7 @@ This project was built with assistance from an AI pair-programmer to speed up sc
 - Drafting documentation (README, this AI_USAGE file)
 
 Human decisions included:
+
 - Choosing libraries and enforcing clean architecture boundaries
 - Reviewing and editing generated code for clarity, type-safety, and best practices
 - Ensuring minimal, senior-level defaults (Zod env validation, rate limiting, CORS, Helmet, Pino)
