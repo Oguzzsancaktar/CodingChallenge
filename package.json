@@ -17,7 +17,8 @@
   "private": true,
   "workspaces": [
     "apps/backend",
-    "apps/frontend"
+    "apps/frontend",
+    "packages/shared"
   ],
   "devDependencies": {
     "concurrently": "^9.2.1"

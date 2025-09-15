@@ -1,18 +1,27 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { http } from './lib/api'
+import { useEffect, useState } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
+import apiClient from './config/axiosInstance';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [apiStatus, setApiStatus] = useState<string>('checking...')
+  const [count, setCount] = useState(0);
+  const [apiStatus, setApiStatus] = useState<string>('checking...');
 
   useEffect(() => {
-    http<{ status: string; timestamp: string }>('/api/v1/health')
-      .then((d) => setApiStatus(`backend: ${d.status}`))
-      .catch(() => setApiStatus('backend: unavailable'))
-  }, [])
+    apiClient
+      .get('/health')
+      .then((res) => {
+        const data = res.data as {
+          success?: boolean;
+          data?: { status: string; timestamp: string };
+          status?: string;
+        };
+        const status = data?.data?.status ?? data?.status ?? 'unknown';
+        setApiStatus(`backend: ${status}`);
+      })
+      .catch(() => setApiStatus('backend: unavailable'));
+  }, []);
 
   return (
     <>
@@ -35,7 +44,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
