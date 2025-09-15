@@ -1,4 +1,4 @@
-export interface IGitHubRepo {
+export default interface IGitHubRepo {
   id: number;
   name: string;
   html_url: string;
@@ -7,4 +7,5 @@ export interface IGitHubRepo {
   language?: string | null;
   fork: boolean;
 }
+
 
