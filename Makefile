@@ -25,6 +25,9 @@ help:
 
 .PHONY: up
 up:
+	@# Free local ports to avoid bind conflicts
+	@PID=$$(lsof -tiTCP:4000 -sTCP:LISTEN); if [ -n "$$PID" ]; then echo "Killing process on :4000 ($$PID)"; kill -9 $$PID || true; fi
+	@PID=$$(lsof -tiTCP:5173 -sTCP:LISTEN); if [ -n "$$PID" ]; then echo "Killing process on :5173 ($$PID)"; kill -9 $$PID || true; fi
 	$(DOCKER_COMPOSE) up -d --build
 	@echo "Services starting: http://localhost:4000 (API), http://localhost:5173 (Web)"
 
@@ -46,14 +49,14 @@ frontend-shell:
 
 .PHONY: test
 test:
-	# Backend tests
-	$(DOCKER_COMPOSE) exec -T backend bash -lc 'npm run test -w @codingchallenge/backend'
-	# Frontend tests
-	$(DOCKER_COMPOSE) exec -T frontend bash -lc 'npm run test -w frontend'
+	# Backend tests (run without requiring services to be running)
+	$(DOCKER_COMPOSE) run --rm -T -v $(PWD):/workspace -w /workspace backend bash -lc 'npm ci --workspaces && npm run test -w @codingchallenge/backend'
+	# Frontend tests (no dependency on backend service)
+	$(DOCKER_COMPOSE) run --rm --no-deps -T -v $(PWD):/workspace -w /workspace frontend bash -lc 'npm ci --workspaces && npm run test -w frontend'
 
 .PHONY: build
 build:
-	$(DOCKER_COMPOSE) exec -T backend bash -lc 'npm run build -w @codingchallenge/backend && npm run build -w frontend'
+	$(DOCKER_COMPOSE) run --rm -T -v $(PWD):/workspace -w /workspace backend bash -lc 'npm ci --workspaces && npm run build'
 
 .PHONY: clean
 clean:
@@ -65,17 +68,22 @@ clean:
 
 .PHONY: dev
 dev:
+	@# Free local ports first
+	@PID=$$(lsof -tiTCP:4000 -sTCP:LISTEN); if [ -n "$$PID" ]; then echo "Killing process on :4000 ($$PID)"; kill -9 $$PID || true; fi
+	@PID=$$(lsof -tiTCP:5173 -sTCP:LISTEN); if [ -n "$$PID" ]; then echo "Killing process on :5173 ($$PID)"; kill -9 $$PID || true; fi
 	npm run dev
 
 .PHONY: start
 start:
+	@# Ensure :4000 is free before starting
+	@PID=$$(lsof -tiTCP:4000 -sTCP:LISTEN); if [ -n "$$PID" ]; then echo "Killing process on :4000 ($$PID)"; kill -9 $$PID || true; fi
 	npm run build
 	npm run start
 
 .PHONY: test-local
 test-local:
-	npm run test -w @codingchallenge/backend || true
-	npm run test -w frontend || true
+	npm run test -w @codingchallenge/backend
+	npm run test -w frontend
 
 .PHONY: typecheck
 typecheck:

@@ -74,7 +74,7 @@ describe('profileServices - updateProfile', () => {
       }
       expect(url).toBe('/profile');
       expect(method).toBe('PUT');
-      expect(data).toEqual({ name: 'Johnny' });
+      expect(data).toEqual({ name: 'Johnny', email: 'john@doe.com' });
       hasUpdated = true;
       return { data: updated };
     });

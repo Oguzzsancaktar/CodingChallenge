@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     image: node:22-bookworm
@@ -16,6 +14,7 @@ services:
       LOG_LEVEL: info
     volumes:
       - ./:/workspace:delegated
+      - backend_root_node_modules:/workspace/node_modules
       - backend_node_modules:/workspace/apps/backend/node_modules
       - frontend_node_modules:/workspace/apps/frontend/node_modules
       - shared_node_modules:/workspace/packages/shared/node_modules
@@ -43,6 +42,7 @@ services:
       CHOKIDAR_USEPOLLING: "1"
     volumes:
       - ./:/workspace:delegated
+      - frontend_root_node_modules:/workspace/node_modules
       - backend_node_modules:/workspace/apps/backend/node_modules
       - frontend_node_modules:/workspace/apps/frontend/node_modules
       - shared_node_modules:/workspace/packages/shared/node_modules
@@ -51,6 +51,8 @@ services:
         condition: service_healthy
 
 volumes:
+  backend_root_node_modules:
+  frontend_root_node_modules:
   backend_node_modules:
   frontend_node_modules:
   shared_node_modules:

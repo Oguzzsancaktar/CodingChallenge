@@ -23,5 +23,8 @@
   "devDependencies": {
     "concurrently": "^9.2.1",
     "tsx": "^4.20.5"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-darwin-x64": "^4.50.2"
   }
 }
