@@ -9,6 +9,8 @@ import { profileRouter } from "./routes/profile.js";
 import { githubRouter } from "./routes/github.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { loadEnv } from "./config/env.js";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger.js";
 
 export const createApp = (allowedOrigin: string) => {
   const app = express();
@@ -38,6 +40,13 @@ export const createApp = (allowedOrigin: string) => {
   api.use(profileRouter);
   api.use(githubRouter);
   app.use("/api/v1", api);
+
+  // Swagger docs
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.get("/openapi.json", (_req, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.send(swaggerSpec);
+  });
 
   app.use(notFoundHandler);
   app.use(errorHandler);
