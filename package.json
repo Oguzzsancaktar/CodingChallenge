@@ -1,0 +1,25 @@
+{
+  "name": "codingchallenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c yellow,cyan \"npm:dev --workspace=@codingchallenge/backend\" \"npm:dev --workspace=frontend\"",
+    "build": "npm run build -w @codingchallenge/backend && npm run build -w frontend",
+    "start": "npm run start -w @codingchallenge/backend",
+    "typecheck": "npm run typecheck -w @codingchallenge/backend && tsc -b apps/frontend",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
