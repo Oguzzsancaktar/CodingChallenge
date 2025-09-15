@@ -3,6 +3,7 @@ export default interface IProfile {
   name?: string;
   email: string;
   bio?: string;
+  githubUsername?: string;
   updatedAt: string;
 }
 

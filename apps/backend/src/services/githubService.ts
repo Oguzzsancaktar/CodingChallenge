@@ -22,8 +22,15 @@ export async function fetchUserRepos(username: string): Promise<GitHubRepo[]> {
   if (env.GITHUB_TOKEN) headers['Authorization'] = `Bearer ${env.GITHUB_TOKEN}`;
   const resp = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos`, { headers });
   if (!resp.ok) {
+    if (resp.status === 404) {
+      // User not found on GitHub; treat as empty repo list rather than server error
+      return [];
+    }
     const text = await resp.text();
-    throw new Error(text || `GitHub HTTP ${resp.status}`);
+    const message = text || `GitHub HTTP ${resp.status}`;
+    const error = new Error(message) as Error & { status?: number };
+    error.status = resp.status;
+    throw error;
   }
   const data = (await resp.json()) as GitHubRepo[];
   cache.set(key, data);

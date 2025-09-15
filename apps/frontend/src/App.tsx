@@ -1,49 +1,70 @@
-import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { useState } from 'react';
 import './App.css';
-import apiClient from './config/axiosInstance';
+import Button from '@/components/Button';
+import Card from '@/components/Card';
+import LoginView from '@/views/LoginView';
+import ProfileView from '@/views/ProfileView';
+import GithubView from '@/views/GithubView';
+
+type TabKey = 'profile' | 'github';
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [apiStatus, setApiStatus] = useState<string>('checking...');
+  const [isAuthed, setIsAuthed] = useState<boolean>(
+    () => !!localStorage.getItem('token')
+  );
+  const [tab, setTab] = useState<TabKey>('profile');
 
-  useEffect(() => {
-    apiClient
-      .get('/health')
-      .then((res) => {
-        const data = res.data as {
-          success?: boolean;
-          data?: { status: string; timestamp: string };
-          status?: string;
-        };
-        const status = data?.data?.status ?? data?.status ?? 'unknown';
-        setApiStatus(`backend: ${status}`);
-      })
-      .catch(() => setApiStatus('backend: unavailable'));
-  }, []);
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuthed(false);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>{apiStatus}</p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="min-h-screen bg-gray-50">
+      <header className="border-b bg-white">
+        <div className="mx-auto flex max-w-6xl items-center justify-between p-4">
+          <div className="text-lg font-semibold">User Profile Manager</div>
+          <div className="flex items-center gap-3 text-sm text-gray-600">
+            {isAuthed ? (
+              <Button variant="secondary" onClick={logout}>
+                Logout
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-6xl p-4">
+        {!isAuthed ? (
+          <LoginView onLoggedIn={() => setIsAuthed(true)} />
+        ) : (
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+            <aside className="lg:col-span-1">
+              <Card>
+                <nav className="flex flex-col gap-2">
+                  <Button
+                    variant={tab === 'profile' ? 'primary' : 'secondary'}
+                    onClick={() => setTab('profile')}
+                  >
+                    Profile
+                  </Button>
+                  <Button
+                    variant={tab === 'github' ? 'primary' : 'secondary'}
+                    onClick={() => setTab('github')}
+                  >
+                    GitHub
+                  </Button>
+                </nav>
+              </Card>
+            </aside>
+            <section className="lg:col-span-3">
+              {tab === 'profile' && <ProfileView />}
+              {tab === 'github' && <GithubView />}
+            </section>
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
 

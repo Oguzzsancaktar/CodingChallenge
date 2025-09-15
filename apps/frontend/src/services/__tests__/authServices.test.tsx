@@ -41,7 +41,7 @@ describe('authServices - login', () => {
     mocks.baseQuery.mockImplementation(async ({ url, method, data }) => {
       expect(url).toBe('/auth/login');
       expect(method).toBe('POST');
-      expect(data).toEqual({ email: 'john@doe.com', name: 'John' });
+      expect(data).toEqual({ email: 'john@doe.com' });
       return { data: successData };
     });
 
@@ -52,7 +52,6 @@ describe('authServices - login', () => {
 
     const promise = result.current[0]({
       email: 'john@doe.com',
-      name: 'John',
     } as any);
     await waitFor(() => expect(promise).resolves.toBeTruthy());
 

@@ -18,14 +18,14 @@ describe('routes integration', () => {
     expect(res.body.data.status).toBe('ok')
   })
 
-  it('auth login => profile 404 then update => get', async () => {
-    const login = await request(app).post('/api/v1/auth/login').send({ email: 'a@b.com', name: 'A' })
+  it('auth login => profile auto-created then update => get', async () => {
+    const login = await request(app).post('/api/v1/auth/login').send({ email: 'a@b.com' })
     expect(login.status).toBe(200)
     const token = login.body.data.token as string
 
-    const notFound = await request(app).get('/api/v1/profile').set('Authorization', `Bearer ${token}`)
-    expect(notFound.status).toBe(404)
-    expect(notFound.body.success).toBe(false)
+    const initial = await request(app).get('/api/v1/profile').set('Authorization', `Bearer ${token}`)
+    expect(initial.status).toBe(200)
+    expect(initial.body.success).toBe(true)
 
     const updated = await request(app)
       .put('/api/v1/profile')
