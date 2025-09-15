@@ -9,7 +9,7 @@ const EnvSchema = z.object({
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
   GITHUB_CACHE_TTL_MS: z.coerce.number().int().positive().default(60_000),
   GITHUB_TOKEN: z.string().optional(),
-  LOG_LEVEL: z.enum(["fatal","error","warn","info","debug","trace","silent"]).default("info")
+  LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info")
 });
 
 export type Env = z.infer<typeof EnvSchema> & { PORT: number };
