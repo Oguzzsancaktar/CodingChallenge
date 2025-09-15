@@ -27,7 +27,8 @@ describe('githubController', () => {
     const res: any = { statusCode: 200, body: undefined, status(code: number) { this.statusCode = code; return this }, json(payload: any) { this.body = payload } }
     await getReposController(req, res, () => { })
     expect(res.statusCode ?? 200).toBe(200)
-    expect(Array.isArray(res.body)).toBe(true)
+    expect(res.body?.success).toBe(true)
+    expect(Array.isArray(res.body?.data)).toBe(true)
   })
 })
 

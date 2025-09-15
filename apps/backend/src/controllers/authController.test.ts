@@ -7,6 +7,7 @@ describe('authController', () => {
     const res: any = { statusCode: 200, status(code: number) { this.statusCode = code; return this }, json(payload: any) { this.payload = payload } }
     await loginController(req, res, () => { })
     expect(res.statusCode).toBe(400)
+    expect(res.payload?.success).toBe(false)
   })
 })
 

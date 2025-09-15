@@ -1,7 +1,8 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
+import { fail } from "@codingchallenge/shared";
 
 export const notFoundHandler: RequestHandler = (_req, res) => {
-  res.status(404).json({ message: "Not Found" });
+  res.status(404).json(fail("Not Found"));
 };
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -10,7 +11,7 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (status >= 500) {
     console.error("Unhandled error:", err);
   }
-  res.status(status).json({ message });
+  res.status(status).json(fail(message));
 };
 
 
