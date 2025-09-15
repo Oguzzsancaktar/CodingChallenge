@@ -1,25 +1,11 @@
 import { Low } from "lowdb";
 import { Memory } from "lowdb";
+import type { IUser, IProfile } from "@codingchallenge/shared";
 
-export type User = {
-  id: string;
-  email: string;
-  name?: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type Profile = {
-  userId: string;
-  name?: string;
-  email: string;
-  bio?: string;
-  updatedAt: string;
-};
 
 export type DbData = {
-  users: User[];
-  profiles: Profile[];
+  users: IUser[];
+  profiles: IProfile[];
 };
 
 const defaultData: DbData = { users: [], profiles: [] };

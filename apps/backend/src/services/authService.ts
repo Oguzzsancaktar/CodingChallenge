@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { loadEnv } from "../config/env.js";
 import { findUserByEmail, createUser } from "../repositories/userRepository.js";
+import type { IAuthTokenPayload } from "@codingchallenge/shared";
 
 const env = loadEnv();
 const algo = "HS256";
@@ -21,7 +22,7 @@ export async function signInOrRegister(email: string, name?: string): Promise<{ 
   return { token, userId };
 }
 
-export async function verifyToken(token: string): Promise<{ userId: string; email?: string }> {
+export async function verifyToken(token: string): Promise<IAuthTokenPayload> {
   const { payload } = await jwtVerify(token, key, { algorithms: [algo] });
   return { userId: String(payload.sub), email: typeof payload["email"] === "string" ? payload["email"] : undefined };
 }

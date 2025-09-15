@@ -5,11 +5,9 @@ const originalFetch = globalThis.fetch
 
 describe('githubController', () => {
   beforeEach(() => {
-    // @ts-expect-error override fetch for tests
     globalThis.fetch = vi.fn()
   })
   afterEach(() => {
-    // @ts-expect-error restore fetch
     globalThis.fetch = originalFetch
     vi.restoreAllMocks()
   })

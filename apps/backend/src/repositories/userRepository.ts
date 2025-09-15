@@ -1,4 +1,5 @@
 import { db, type User } from "../db/lowdb.js";
+import type { IUser } from "@codingchallenge/shared";
 
 export async function findUserByEmail(email: string): Promise<User | undefined> {
   await db.read();
