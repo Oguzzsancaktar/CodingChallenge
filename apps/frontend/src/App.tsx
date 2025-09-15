@@ -5,6 +5,10 @@ import Card from '@/components/Card';
 import LoginView from '@/views/LoginView';
 import ProfileView from '@/views/ProfileView';
 import GithubView from '@/views/GithubView';
+import { useDispatch } from 'react-redux';
+import { authApiSlice } from '@/services/authServices';
+import { profileApiSlice } from '@/services/profileServices';
+import { githubApiSlice } from '@/services/githubServices';
 
 type TabKey = 'profile' | 'github';
 
@@ -13,9 +17,14 @@ function App() {
     () => !!localStorage.getItem('token')
   );
   const [tab, setTab] = useState<TabKey>('profile');
+  const dispatch = useDispatch();
 
   const logout = () => {
     localStorage.removeItem('token');
+    // Clear cached API state so data from previous user is not shown
+    dispatch(authApiSlice.util.resetApiState());
+    dispatch(profileApiSlice.util.resetApiState());
+    dispatch(githubApiSlice.util.resetApiState());
     setIsAuthed(false);
   };
 

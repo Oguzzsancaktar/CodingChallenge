@@ -11,7 +11,9 @@ import {
 import type { IUpdateProfileRequest } from '@codingchallenge/shared';
 
 export default function ProfileView() {
-  const { data, error, isLoading, refetch } = useGetProfileQuery();
+  const { data, error, isLoading, refetch } = useGetProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const [updateProfile, { isLoading: isSaving }] = useUpdateProfileMutation();
   const [form, setForm] = useState<IUpdateProfileRequest>({ email: '' });
   const [message, setMessage] = useState<string | null>(null);
@@ -25,6 +27,12 @@ export default function ProfileView() {
         githubUsername: data.githubUsername,
       });
   }, [data]);
+
+  // Ensure fresh data after auth changes or navigation back to this tab
+  useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));

@@ -10,7 +10,10 @@ import { useGetProfileQuery } from '@/services/profileServices';
 export default function GithubView() {
   const [username, setUsername] = useState('');
   const [trigger, { data, isFetching, error }] = useLazyGetReposQuery();
-  const { data: profile } = useGetProfileQuery();
+  const { data: profile, refetch: refetchProfile } = useGetProfileQuery(
+    undefined,
+    { refetchOnMountOrArgChange: true }
+  );
 
   const defaultUsername = useMemo(() => {
     if (profile?.githubUsername && profile.githubUsername.trim().length > 0) {
@@ -37,6 +40,12 @@ export default function GithubView() {
       trigger(defaultUsername);
     }
   }, [defaultUsername]);
+
+  // Ensure profile used for default username is fresh when mounting
+  useEffect(() => {
+    refetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const search = async (e: React.FormEvent) => {
     e.preventDefault();
