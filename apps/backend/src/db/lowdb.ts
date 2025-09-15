@@ -34,4 +34,9 @@ export async function initDb(): Promise<void> {
   }
 }
 
+export async function resetDb(): Promise<void> {
+  db.data = structuredClone(defaultData);
+  await db.write();
+}
+
 

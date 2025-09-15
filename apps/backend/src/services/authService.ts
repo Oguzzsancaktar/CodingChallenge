@@ -23,7 +23,7 @@ export async function signInOrRegister(email: string, name?: string): Promise<{ 
 
 export async function verifyToken(token: string): Promise<{ userId: string; email?: string }> {
   const { payload } = await jwtVerify(token, key, { algorithms: [algo] });
-  return { userId: String(payload.sub), email: typeof payload.email === "string" ? payload.email : undefined };
+  return { userId: String(payload.sub), email: typeof payload["email"] === "string" ? payload["email"] : undefined };
 }
 
 
