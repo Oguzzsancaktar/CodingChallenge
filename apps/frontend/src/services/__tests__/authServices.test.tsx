@@ -52,7 +52,7 @@ describe('authServices - login', () => {
 
     const promise = result.current[0]({
       email: 'john@doe.com',
-    } as any);
+    });
     await waitFor(() => expect(promise).resolves.toBeTruthy());
 
     // Wait for queryFulfilled side effect
@@ -71,7 +71,7 @@ describe('authServices - login', () => {
       wrapper: wrapperFactory(store),
     });
 
-    const promise = result.current[0]({ email: 'x@y.z' } as any);
+    const promise = result.current[0]({ email: 'x@y.z' });
     await waitFor(() => expect(promise).resolves.toBeTruthy());
 
     await waitFor(() => {

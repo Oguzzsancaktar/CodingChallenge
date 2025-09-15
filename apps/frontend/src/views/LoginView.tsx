@@ -16,8 +16,9 @@ export default function LoginView({ onLoggedIn }: { onLoggedIn: () => void }) {
     try {
       const res = await login({ email }).unwrap();
       if (res?.token) onLoggedIn();
-    } catch (err: any) {
-      setError(typeof err?.data === 'string' ? err.data : 'Login failed');
+    } catch (err) {
+      const maybe = err as { data?: unknown };
+      setError(typeof maybe?.data === 'string' ? maybe.data : 'Login failed');
     }
   };
 

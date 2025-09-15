@@ -90,7 +90,10 @@ describe('profileServices - updateProfile', () => {
     const updateHook = renderHook(() => useUpdateProfileMutation(), {
       wrapper,
     });
-    const promise = updateHook.result.current[0]({ name: 'Johnny' } as any);
+    const promise = updateHook.result.current[0]({
+      name: 'Johnny',
+      email: 'john@doe.com',
+    });
     await waitFor(() => expect(promise).resolves.toBeTruthy());
 
     // After invalidation, GET should refetch. We simulate by letting RTKQ dispatch invalidation; our baseQuery returns updated on any subsequent GET

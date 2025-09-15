@@ -1,14 +1,15 @@
-import { db, type Profile } from "../db/lowdb.js";
+import { db } from "../db/lowdb.js";
+import type { IProfile } from "@codingchallenge/shared";
 
-export async function getProfileByUserId(userId: string): Promise<Profile | undefined> {
+export async function getProfileByUserId(userId: string): Promise<IProfile | undefined> {
   await db.read();
   return db.data!.profiles.find((p) => p.userId === userId);
 }
 
 export async function upsertProfile(
   userId: string,
-  input: Partial<Pick<Profile, "name" | "email" | "bio" | "githubUsername">> & { email: string }
-): Promise<Profile> {
+  input: Partial<Pick<IProfile, "name" | "email" | "bio" | "githubUsername">> & { email: string }
+): Promise<IProfile> {
   await db.read();
   const now = new Date().toISOString();
   let profile = db.data!.profiles.find((p) => p.userId === userId);

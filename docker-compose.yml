@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  backend:
+    image: node:22-bookworm
+    working_dir: /workspace
+    command: bash -lc "npm ci --workspaces && npm run dev -w @codingchallenge/backend"
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      # Frontend origin for CORS. In docker, frontend runs on http://localhost:5173 mapped from the container.
+      ALLOWED_ORIGIN: http://localhost:5173
+      AUTH_JWT_SECRET: dev-secret-change-me
+      LOG_LEVEL: info
+    volumes:
+      - ./:/workspace:delegated
+      - backend_node_modules:/workspace/apps/backend/node_modules
+      - frontend_node_modules:/workspace/apps/frontend/node_modules
+      - shared_node_modules:/workspace/packages/shared/node_modules
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "http=require('http');http.get('http://localhost:4000/api/v1/health',res=>{process.exit(res.statusCode===200?0:1)}).on('error',()=>process.exit(1));",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  frontend:
+    image: node:22-bookworm
+    working_dir: /workspace
+    command: bash -lc "npm ci --workspaces && npm run dev -w frontend"
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+      VITE_BACKEND_ORIGIN: http://backend:4000
+      CHOKIDAR_USEPOLLING: "1"
+    volumes:
+      - ./:/workspace:delegated
+      - backend_node_modules:/workspace/apps/backend/node_modules
+      - frontend_node_modules:/workspace/apps/frontend/node_modules
+      - shared_node_modules:/workspace/packages/shared/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  backend_node_modules:
+  frontend_node_modules:
+  shared_node_modules:

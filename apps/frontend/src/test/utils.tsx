@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react';
+import React, { type PropsWithChildren, type Reducer } from 'react';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import type { RenderOptions } from '@testing-library/react';
@@ -6,7 +6,9 @@ import { render } from '@testing-library/react';
 
 // Consumers will import API slices from source files inside tests
 
-export function createTestStore(reducers: Record<string, any>) {
+export function createTestStore(
+  reducers: Record<string, Reducer<unknown, unknown>>
+) {
   return configureStore({
     reducer: reducers,
     middleware: (getDefault) =>
@@ -16,7 +18,7 @@ export function createTestStore(reducers: Record<string, any>) {
 
 export function renderWithStore(
   ui: React.ReactElement,
-  reducers: Record<string, any>,
+  reducers: Record<string, Reducer<unknown, unknown>>,
   options?: RenderOptions
 ) {
   const store = createTestStore(reducers);

@@ -45,7 +45,7 @@ export default function ProfileView() {
       await updateProfile(form).unwrap();
       setMessage('Profile updated');
       refetch();
-    } catch (err: any) {
+    } catch {
       setMessage('Update failed');
     }
   };

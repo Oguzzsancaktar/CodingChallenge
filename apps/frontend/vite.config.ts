@@ -6,15 +6,15 @@ import path from 'node:path'
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: true,
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: process.env.VITE_BACKEND_ORIGIN || 'http://localhost:4000',
         changeOrigin: true
       }
     }
-  }
-  ,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')

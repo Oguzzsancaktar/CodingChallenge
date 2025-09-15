@@ -39,7 +39,7 @@ export default function GithubView() {
       setUsername(defaultUsername);
       trigger(defaultUsername);
     }
-  }, [defaultUsername]);
+  }, [defaultUsername, trigger, username]);
 
   // Ensure profile used for default username is fresh when mounting
   useEffect(() => {
